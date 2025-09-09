@@ -6,7 +6,7 @@
   "scripts": {
     "dev-mode": "vite --mode development",
     "test-mode": "vite --mode test",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build --mode production",
     "lint": "eslint .",
     "preview": "vite preview",
     "test:watch": "vitest --poolOptions.threads.singleThread --no-file-parallelism"

@@ -34,6 +34,7 @@ export const getBin = async (req: Request, res: Response) => {
 // GET '/:bin_id/records'
 export const getRecords = async (req: Request, res: Response) => {
   const bin_id = req.params.bin_id
+  console.log(req.headers)
   const query = 'SELECT * FROM records WHERE bin_id = $1'
   const values = [bin_id]
   const queryResult = await pgClient.query(query, values)
@@ -71,6 +72,7 @@ export const createRecord = async (req: Request, res: Response) => {
   wss.clients.forEach((client) => {
     console.log("INSIDE WEB SOCKET")
     if (client.readyState === WebSocket.OPEN) {
+      console.log(client.url)
       client.send(JSON.stringify(recordWithDoc))
     }
   })

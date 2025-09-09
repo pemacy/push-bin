@@ -19,6 +19,15 @@ wss.on("connection", (ws) => {
   ws.send(JSON.stringify(({ type: "Welcome", message: 'Connected to web socket' })))
 })
 
+server.on("upgrade", (req, socket, head) => {
+  console.log("Upgrade request headers:", req.headers);
+
+  // Example: specifically check for WebSocket
+  if (req.headers["upgrade"]?.toLowerCase() === "websocket") {
+    console.log("This is a WebSocket upgrade request.");
+  }
+});
+
 server.listen(PORT, () => {
   console.log('Request Bin server started on port', PORT)
 })
