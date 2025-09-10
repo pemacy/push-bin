@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react'
-import './App.css'
-import Form from './components/MainPage/Form'
-import Sidebar from './components/MainPage/Sidebar'
-import Modal from './components/MainPage/Modal'
-import BinPage from './components/BinPage/BinPage'
-import type { RecordWithDoc, BinInterface, AppView } from './utils/types'
-import * as webhookApi from './services/webhookApi'
+import { useState, useEffect } from 'react';
+import './App.css';
+import Form from './components/MainPage/Form';
+import Sidebar from './components/MainPage/Sidebar';
+import Modal from './components/MainPage/Modal';
+import BinPage from './components/BinPage/BinPage';
+import type { RecordWithDoc, BinInterface, AppView } from './utils/types';
+import * as webhookApi from './services/webhookApi';
 
 function App() {
-  const [view, setView] = useState<AppView>('home'); // controls which components are visible
+  const [view, setView] = useState<AppView>('home');
   const [bins, setBins] = useState<BinInterface[]>([]);
   const [selectedBin, setSelectedBin] = useState<BinInterface | undefined>();
   const [records, setRecords] = useState<RecordWithDoc[]>([]);
@@ -19,12 +19,13 @@ function App() {
 
   useEffect(() => {
     const fetchBins = async () => {
-      const bins = await webhookApi.getBins()
-      setBins(bins)
-    }
+      const retrievedBins = await webhookApi.getBins();
+      const sanitizedBins = Array.isArray(retrievedBins) ? retrievedBins : [];
+      setBins(sanitizedBins);
+    };
 
-    fetchBins()
-  }, [])
+    fetchBins();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-900 rounded-lg text-white flex flex-col md:flex-row">
@@ -81,4 +82,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

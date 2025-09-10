@@ -36,7 +36,7 @@ const Bin = ({ selectedBin, records }: BinProps) => {
             ref={linkRef}
             className="font-mono text-gray-800 dark:text-gray-100 break-all"
           >
-            https://amazing-mostly-tadpole.ngrok-free.app/{selectedBin.id}
+            https://brightly-sacred-monitor.ngrok-free.app/api/{selectedBin.id}
           </span>
           <button
             onClick={handleCopy}
