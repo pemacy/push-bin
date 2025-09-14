@@ -5,6 +5,7 @@ const webHookRoutes = express.Router()
 
 // API Routes
 webHookRoutes.get('/', webRouteController.getBins)
+webHookRoutes.get('/health', webRouteController.getHealth)
 webHookRoutes.get('/bins', webRouteController.getBins)
 webHookRoutes.get('/bins/:bin_id', webRouteController.getBin)
 webHookRoutes.get('/bins/:bin_id/records', webRouteController.getRecords)

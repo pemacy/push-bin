@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import * as api from './webRouteController'
-import pgClient from '../db/postgres/pgClient'
 import * as utils from './controllerUtils'
 
 // GET '/'

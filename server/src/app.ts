@@ -15,7 +15,7 @@ app.use((req, res, next) => {
   next(); // Important! Pass control to next middleware/route
 });
 app.use(cookieParser())
-app.use(cors({ origin: ["http://localhost:5173", "http://ec2-18-233-152-10.compute-1.amazonaws.com/"], credentials: true }))
+app.use(cors())
 app.use(express.json())
 
 app.set('views', './src/views')

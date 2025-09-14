@@ -4,7 +4,7 @@ import Bin from './Bin'
 
 
 
-const BinPageContent = ({ selectedBin, records } : BinComponentProps) => {
+const BinPageContent = ({ selectedBin, records }: BinComponentProps) => {
   const [copiedLink, setCopiedLink] = useState<boolean>(false)
   const linkRef = useRef<HTMLSpanElement>(null);
   const handleCopy = () => {
@@ -29,7 +29,7 @@ const BinPageContent = ({ selectedBin, records } : BinComponentProps) => {
               className="font-mono p-1 text-gray-700 dark:text-gray-200"
               ref={linkRef}
             >
-              https://amazing-mostly-tadpole.ngrok-free.app/{selectedBin.id}
+              https://amazing-mostly-tadpole.ngrok-free.app/api/{selectedBin.id}
             </span>
             <span className="inline-flex items-center gap-2 ml-2">
               <button

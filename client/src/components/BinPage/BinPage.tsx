@@ -8,7 +8,7 @@ const BinPage = ({ setBins, selectedBin, records, setView, setSelectedBin, setRe
 
   useEffect(() => {
     //const ngrokWebsocketURL = "wss://amazing-mostly-tadpole.ngrok-free.app/"
-    const localhostWebsocketURL = "ws://18.233.152.10/api"
+    const localhostWebsocketURL = `ws://44.204.241.53/api`
     console.log("useEffect - websocket connection, url:", localhostWebsocketURL)
     const ws = new WebSocket(localhostWebsocketURL);
     ws.onopen = () => {
