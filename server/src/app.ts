@@ -9,15 +9,20 @@ import webHookRoutes from './routes/webHookRoutes'
 import testingRoutes from './routes/testingRoutes'
 
 const app = express()
-
+// Middleware to log requests
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
+  next(); // Important! Pass control to next middleware/route
+});
 app.use(cookieParser())
-app.use(cors({ origin: "http://localhost:5173", credentials: true }))
+app.use(cors())
 app.use(express.json())
 
 app.set('views', './src/views')
 app.set('view engine', 'ejs')
 
 app.use('/', webHookRoutes)
+app.use('/api', webHookRoutes)
 app.use('/testing', testingRoutes)
 
 export default app

@@ -1,11 +1,16 @@
+import { WebSocket } from 'ws'
 import { Request, Response } from 'express'
 import WebhookPayload from '../models/WebhookPayload'
-import pgClient from '../db/postgres/pgClient'
 import * as utils from './controllerUtils'
 import { wss } from '../server'
 
 // GET '/'
+export const getHealth = async (_req: Request, res: Response) => {
+  res.send("Good Health")
+}
+
 export const getBins = async (req: Request, res: Response) => {
+  const pgClient = await utils.setPgClient()
   if (req.cookies.session_id) {
     const session_id = req.cookies.session_id
     const query = 'SELECT * FROM bins WHERE session_id = $1'
@@ -21,6 +26,7 @@ export const getBins = async (req: Request, res: Response) => {
 
 // GET '/bins/:bin_id'
 export const getBin = async (req: Request, res: Response) => {
+  const pgClient = await utils.setPgClient()
   const bin_id = req.params.bin_id
   const query = 'SELECT * FROM bins WHERE id = $1'
   const values = [bin_id]
@@ -33,7 +39,9 @@ export const getBin = async (req: Request, res: Response) => {
 
 // GET '/:bin_id/records'
 export const getRecords = async (req: Request, res: Response) => {
+  const pgClient = await utils.setPgClient()
   const bin_id = req.params.bin_id
+  console.log(req.headers)
   const query = 'SELECT * FROM records WHERE bin_id = $1'
   const values = [bin_id]
   const queryResult = await pgClient.query(query, values)
@@ -48,6 +56,7 @@ export const getRecords = async (req: Request, res: Response) => {
 // POST '/:bin_id'
 // POST '/bins/:bin_id/records'
 export const createRecord = async (req: Request, res: Response) => {
+  const pgClient = await utils.setPgClient()
   const payload = req.body
   const bin_id = req.params.bin_id
   const method = req.method
@@ -71,6 +80,7 @@ export const createRecord = async (req: Request, res: Response) => {
   wss.clients.forEach((client) => {
     console.log("INSIDE WEB SOCKET")
     if (client.readyState === WebSocket.OPEN) {
+      console.log(client.url)
       client.send(JSON.stringify(recordWithDoc))
     }
   })
@@ -79,6 +89,7 @@ export const createRecord = async (req: Request, res: Response) => {
 
 // POST '/bins/new/:bin_id'
 export const createBin = async (req: Request, res: Response) => {
+  const pgClient = await utils.setPgClient()
   // request will have name of bin
   const bin_id = req.params.bin_id
   let session_id: string
@@ -100,6 +111,7 @@ export const createBin = async (req: Request, res: Response) => {
 
 // DETELE /bins/:bin_id/records/:record_id
 export const deleteRecord = async (req: Request, res: Response) => {
+  const pgClient = await utils.setPgClient()
   const binId = req.params.bin_id
   const recordId = req.params.record_id
   const query = 'DELETE FROM records WHERE bin_id = $1 AND id = $1 RETURNING *'
@@ -112,6 +124,7 @@ export const deleteRecord = async (req: Request, res: Response) => {
 
 // DETELE /bins/:bin_id/records
 export const deleteRecords = async (req: Request, res: Response) => {
+  const pgClient = await utils.setPgClient()
   const query = 'DELETE FROM records RETURNING *'
   const result = await pgClient.query(query)
   const records = result.rows
@@ -125,6 +138,7 @@ export const deleteRecords = async (req: Request, res: Response) => {
 
 // DETELE /bins/:bin_id
 export const deleteBin = async (req: Request, res: Response) => {
+  const pgClient = await utils.setPgClient()
   const binId = req.params.bin_id
   let query = 'SELECT * FROM records WHERE bin_id = $1'
   const values = [binId]
@@ -145,6 +159,7 @@ export const deleteBin = async (req: Request, res: Response) => {
 
 // DETELE /bins
 export const deleteBins = async (req: Request, res: Response) => {
+  const pgClient = await utils.setPgClient()
   const session_id = req.cookies.session_id
 
   // Get all bins with that session id

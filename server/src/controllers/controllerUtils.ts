@@ -1,6 +1,6 @@
 import type { Response } from 'express'
 import WebhookPayload from '../models/WebhookPayload'
-import pgClient from '../db/postgres/pgClient'
+import * as pgConnection from '../db/postgres/pgClient'
 import { WebhookDoc, RecordWithDoc, BinInterface, Record } from '../utils/types'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -8,6 +8,28 @@ const MS_IN_HOUR = 60 * 60 * 1000
 const MS_IN_DAY = MS_IN_HOUR * 24
 const MS_IN_WEEK = MS_IN_DAY * 7
 const MS_IN_MONTH = MS_IN_DAY * 30
+const ARCHITECTURE = process.env.ARCHITECTURE
+
+export const setPgClient = async () => {
+  if (!ARCHITECTURE) throw new Error("ARCHITECTURE env variable not set")
+  let client
+  switch (ARCHITECTURE) {
+    case "single-machine":
+    case "3-tier":
+      client = await pgConnection.standard()
+      break;
+    case "RDS-ssl":
+      client = await pgConnection.ssl()
+      break;
+    case "RDS-secret-manager":
+      client = await pgConnection.awsSecretsManager()
+      break;
+    default:
+      throw new Error("Invalid ARCHITECTURE env variable value")
+  }
+  if (!client) throw new Error('PG Client undefined')
+  return client
+}
 
 export const setSessionId = (res: Response) => {
   const session_id = uuidv4()
@@ -20,6 +42,7 @@ export const setSessionId = (res: Response) => {
 }
 
 export const getBinRecords = async (bin: BinInterface) => {
+  const pgClient = await setPgClient()
   const query = 'SELECT * FROM records WHERE bin_id = $1'
   const values = [bin.id]
   const result = await pgClient.query(query, [bin.id])

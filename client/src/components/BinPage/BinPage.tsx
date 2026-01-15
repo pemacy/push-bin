@@ -7,8 +7,15 @@ import type { BinPageProps, RecordWithDoc } from '../../utils/types'
 const BinPage = ({ setBins, selectedBin, records, setView, setSelectedBin, setRecords }: BinPageProps) => {
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:3000");
+    //const ngrokWebsocketURL = "wss://amazing-mostly-tadpole.ngrok-free.app/"
+    const localhostWebsocketURL = `ws://44.204.241.53/api`
+    console.log("useEffect - websocket connection, url:", localhostWebsocketURL)
+    const ws = new WebSocket(localhostWebsocketURL);
+    ws.onopen = () => {
+      console.log('Web Socket Connected')
+    }
     ws.onmessage = (event) => {
+      console.log("Event received:", event.data)
       const record: RecordWithDoc = JSON.parse(event.data);
 
       setRecords((prev) => {
