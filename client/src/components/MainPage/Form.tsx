@@ -1,7 +1,8 @@
 import * as webhookApi from '../../services/webhookApi'
 import { v4 as uuidv4 } from 'uuid'
 import type { FormEvent } from "react"
-import type { BinInterface, AppView, FormProps } from '../../utils/types'
+import type { BinInterface, AppView } from '../../utils/types'
+import { useBins, useViews } from '../../contexts'
 
 const handleOnSubmit = async (
   e: FormEvent<HTMLFormElement>,
@@ -26,8 +27,9 @@ const handleOnSubmit = async (
   }
 }
 
-const Form = ({ setBins, setView, setSelectedBin }: FormProps) => {
-  if (!setBins) throw new Error('setAllBins property is undefined');
+export const Form = () => {
+  const { setBins, setSelectedBin } = useBins()
+  const { setView } = useViews()
 
   const bin_id = uuidv4().slice(0, 7);
 
@@ -57,5 +59,3 @@ const Form = ({ setBins, setView, setSelectedBin }: FormProps) => {
     </form>
   );
 };
-
-export default Form
