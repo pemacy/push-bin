@@ -18,6 +18,17 @@ sudo -u "$PG_SUDO_USER" psql-17 -d "$PGDATABASE" -c "ALTER TABLE records OWNER T
 
 DB_NAME="request_bin_development"
 COLLECTION_NAME="githubpayloads"
+MONGO_USER=prestonmacy
+MONGO_PASSWORD=password
 
-mongosh "$DB_NAME" --quiet --eval "db.getCollection('$COLLECTION_NAME').deleteMany({})"
 
+
+mongosh "$DB_NAME" --eval "db.dropDatabase()"
+mongosh "$DB_NAME" --eval "db.createCollection('${COLLECTION_NAME}')"
+mongosh "$DB_NAME" --eval "
+  db.createUser({
+    user: '$MONGO_USER',
+    pwd: '$MONGO_PASSWORD',
+    roles: [{ role: 'readWrite', db: '$DB_NAME'}]
+  });
+"
