@@ -27,7 +27,7 @@ const FlashMessage = () => {
           className="ml-4 p-1 rounded-full hover:bg-black/10 transition-colors"
           aria-label="Close"
         >
-          <IoClose className="w-5 h-5" />
+          <IoClose className="w-5 h-5 hover:cursor-pointer hover:text-emerald-500" />
         </button>
       </div>
     </div>
