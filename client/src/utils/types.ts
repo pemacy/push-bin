@@ -27,6 +27,10 @@ export interface BinInterface {
   session_id: string;
 }
 
+export type RecordComponentProps = {
+  record: RecordWithDoc;
+};
+
 export type AppView = "home" | "modal" | "bins";
 
 export type RecordsContextType = {
