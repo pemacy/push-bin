@@ -2,13 +2,19 @@
 import { useEffect } from 'react'
 import BinPageHeader from './BinPageHeader'
 import BinPageContent from './BinPageContent'
-import type { BinPageProps, RecordWithDoc } from '../../utils/types'
+import type { RecordWithDoc } from '../../utils/types'
+import { useBins, useViews, useRecords } from '../../contexts'
 
-const BinPage = ({ setBins, selectedBin, records, setView, setSelectedBin, setRecords }: BinPageProps) => {
+const BinPage = () => {
+  const { records, setRecords } = useRecords()
+  const { setBins, setSelectedBin, selectedBin } = useBins()
+  const { setView } = useViews()
+
+  if (selectedBin === undefined) throw new Error('In BinPage component, selectedBin is undefined')
 
   useEffect(() => {
     //const ngrokWebsocketURL = "wss://amazing-mostly-tadpole.ngrok-free.app/"
-    const localhostWebsocketURL = `ws://44.204.241.53/api`
+    const localhostWebsocketURL = `ws://127.0.0.1:3000/api`
     console.log("useEffect - websocket connection, url:", localhostWebsocketURL)
     const ws = new WebSocket(localhostWebsocketURL);
     ws.onopen = () => {

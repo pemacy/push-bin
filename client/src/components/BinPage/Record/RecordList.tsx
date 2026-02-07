@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import Record from "./Record";
-import type { BinProps } from "../../utils/types";
+import type { BinProps } from "../../../utils/types";
 
 const Bin = ({ selectedBin, records }: BinProps) => {
   const linkRef = useRef<HTMLSpanElement>(null);
@@ -12,7 +12,7 @@ const Bin = ({ selectedBin, records }: BinProps) => {
     navigator.clipboard.writeText(link).then(() => {
       setCopied(true);
       // auto-hides copied link message after 2 seconds
-      setTimeout(() => setCopied(false), 2000); 
+      setTimeout(() => setCopied(false), 2000);
     });
   };
 
@@ -36,7 +36,7 @@ const Bin = ({ selectedBin, records }: BinProps) => {
             ref={linkRef}
             className="font-mono text-gray-800 dark:text-gray-100 break-all"
           >
-            https://amazing-mostly-tadpole.ngrok-free.app/{selectedBin.id}
+            {`${import.meta.env.VITE_NGROK_STATIC_URL}/${selectedBin.id}`}
           </span>
           <button
             onClick={handleCopy}

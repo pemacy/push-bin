@@ -1,12 +1,18 @@
 import { useState, useRef } from 'react'
-import type { BinComponentProps } from '../../utils/types'
-import Bin from './Bin'
+import RecordList from './Record'
+import { useRecords, useBins } from '../../contexts'
 
 
 
-const BinPageContent = ({ selectedBin, records }: BinComponentProps) => {
+const BinPageContent = () => {
   const [copiedLink, setCopiedLink] = useState<boolean>(false)
   const linkRef = useRef<HTMLSpanElement>(null);
+
+  const { selectedBin } = useBins()
+  const { records } = useRecords()
+
+  if (selectedBin === undefined) throw new Error('In BinPageContent component, selectedBin is undefined')
+
   const handleCopy = () => {
     if (!linkRef.current) return;
     const link = linkRef.current.textContent ?? "";
@@ -21,7 +27,7 @@ const BinPageContent = ({ selectedBin, records }: BinComponentProps) => {
       {/* Content below */}
       <div className="mt-3">
         {records.length > 0 ? (
-          <Bin selectedBin={selectedBin} records={records} />
+          <RecordList selectedBin={selectedBin} records={records} />
         ) : (
           <p className="text-sm italic text-gray-500 dark:text-gray-400">
             Empty Bin — use{" "}
@@ -29,7 +35,7 @@ const BinPageContent = ({ selectedBin, records }: BinComponentProps) => {
               className="font-mono p-1 text-gray-700 dark:text-gray-200"
               ref={linkRef}
             >
-              https://amazing-mostly-tadpole.ngrok-free.app/api/{selectedBin.id}
+              {`${import.meta.env.VITE_NGROK_STATIC_URL}/${selectedBin.id}`}
             </span>
             <span className="inline-flex items-center gap-2 ml-2">
               <button
