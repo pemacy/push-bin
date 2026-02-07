@@ -2,6 +2,40 @@
 
 A full-stack webhook inspection and testing application that allows developers to create temporary URLs (bins) for capturing, inspecting, and analyzing HTTP requests in real-time.
 
+## Use - need 3 terminal window
+
+1. Terminal 1: Install ngrok
+
+```
+ngrok http --url=amazing-mostly-tadpole.ngrok-free.app 3000
+```
+
+2. Terminal 2:
+
+```
+cd server
+npm run server:dev
+```
+
+3. Terminal 3:
+
+```
+cd client
+npm run dev
+```
+
+## Create webhook
+
+1. Go to localhost:5173 (or whatever vite gives you as the endpoint)
+2. Create and open a new bin
+3. Copy the bin address and put that as the webhook
+
+The page will now start receiving webhook packages
+
+## Github example
+
+If you make a repo have the ngrok endpoint as a webhook, then when you commit it will push information about that commit to Push Bin
+
 ## Features
 
 - **Create Webhook Bins**: Generate unique URLs to capture webhooks and HTTP requests
@@ -17,6 +51,7 @@ A full-stack webhook inspection and testing application that allows developers t
 ## Technology Stack
 
 ### Backend
+
 - **Runtime**: Node.js with TypeScript
 - **Framework**: Express.js 5.1.0
 - **Databases**:
@@ -28,6 +63,7 @@ A full-stack webhook inspection and testing application that allows developers t
 - **Testing**: Vitest 3.2.4
 
 ### Frontend
+
 - **Framework**: React 19.1.1 with TypeScript
 - **Build Tool**: Vite 7.1.2
 - **Styling**: Tailwind CSS 4.1.12
@@ -61,6 +97,7 @@ request-bin-react/
 ## Installation
 
 ### Prerequisites
+
 - Node.js (v18 or higher)
 - PostgreSQL database
 - MongoDB database
@@ -88,6 +125,7 @@ npm install
 Create environment files in both `server/` and `client/` directories:
 
 ### Server Environment (`.env.development`)
+
 ```env
 NODE_ENV=development
 PORT=3000
@@ -110,6 +148,7 @@ CA_FILE_PATH=path/to/ca-certificate.pem
 ```
 
 ### Client Environment (`.env.development`)
+
 ```env
 VITE_WEBHOOK_URL=http://localhost:3000/api
 ```
@@ -117,6 +156,7 @@ VITE_WEBHOOK_URL=http://localhost:3000/api
 ## Database Setup
 
 ### PostgreSQL
+
 ```bash
 # From server directory
 cd server
@@ -124,6 +164,7 @@ psql -U your_username -d request_bin -f src/db/postgres/schema.sql
 ```
 
 ### MongoDB
+
 ```bash
 # MongoDB will create collections automatically on first use
 # Seed data (optional):
@@ -147,6 +188,7 @@ npm run dev-mode
 ```
 
 The application will be available at:
+
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:3000/api
 
@@ -170,6 +212,7 @@ curl -X POST http://localhost:3000/api/your-bin-id \
 ```
 
 Or using another service:
+
 ```bash
 # GitHub webhook example
 # Add the bin URL as a webhook endpoint in your repository settings
@@ -177,23 +220,24 @@ Or using another service:
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/health` | Health check |
-| GET | `/bins` | List all bins for current session |
-| GET | `/bins/:id` | Get bin details |
-| GET | `/bins/:id/records` | Get all records for a bin |
-| POST | `/bins/:id` | Create a new bin |
-| POST | `/:id` | Create record (webhook capture) |
-| POST | `/bins/:id/records` | Create record (webhook capture) |
-| DELETE | `/bins` | Delete all bins for current session |
-| DELETE | `/bins/:id` | Delete a specific bin |
-| DELETE | `/bins/:id/records` | Delete all records for a bin |
-| DELETE | `/bins/:id/records/:id` | Delete a specific record |
+| Method | Endpoint                | Description                         |
+| ------ | ----------------------- | ----------------------------------- |
+| GET    | `/health`               | Health check                        |
+| GET    | `/bins`                 | List all bins for current session   |
+| GET    | `/bins/:id`             | Get bin details                     |
+| GET    | `/bins/:id/records`     | Get all records for a bin           |
+| POST   | `/bins/:id`             | Create a new bin                    |
+| POST   | `/:id`                  | Create record (webhook capture)     |
+| POST   | `/bins/:id/records`     | Create record (webhook capture)     |
+| DELETE | `/bins`                 | Delete all bins for current session |
+| DELETE | `/bins/:id`             | Delete a specific bin               |
+| DELETE | `/bins/:id/records`     | Delete all records for a bin        |
+| DELETE | `/bins/:id/records/:id` | Delete a specific record            |
 
 ## Architecture
 
 ### Hybrid Database Pattern
+
 - **PostgreSQL**: Stores bin metadata and record references (lightweight relational data)
   - `bins` table: id, session_id, created_at
   - `records` table: id, method, bin_id, mongo_doc_id, created_at
@@ -201,6 +245,7 @@ Or using another service:
   - `WebHookPayloads` collection: id, payload, headers
 
 This pattern provides:
+
 - Fast relational queries for bin management
 - Flexible document storage for variable webhook data
 - Optimal performance for each use case
@@ -217,18 +262,21 @@ The application supports four deployment modes via the `ARCHITECTURE` environmen
 ## Testing
 
 ### Backend Tests
+
 ```bash
 cd server
 npm run test:watch
 ```
 
 ### Frontend Tests
+
 ```bash
 cd client
 npm run test:watch
 ```
 
 ### Database Reset
+
 ```bash
 # Reset PostgreSQL test database
 cd server
