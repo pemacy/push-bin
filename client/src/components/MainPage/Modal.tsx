@@ -1,7 +1,7 @@
 import type { MouseEvent } from 'react'
 import type * as appType from '../../utils/types'
 import { getBin } from '../../services/webhookApi'
-// import { setSourceMapsSupport } from 'module'
+import { useRecords, useViews, useBins } from '../../contexts'
 
 const goToMainPage = (
   e: MouseEvent<HTMLDivElement | HTMLButtonElement>,
@@ -27,7 +27,11 @@ const goToBinPage = async (
   setRecords([]);
 }
 
-const Modal = ({ bin, setView, setSelectedBin, setRecords }: appType.ModalProps) => {
+export const Modal = () => {
+  const { setRecords } = useRecords()
+  const { setView } = useViews()
+  const { setSelectedBin, selectedBin } = useBins()
+  if (selectedBin === undefined) throw new Error('In Modal component, selectedBin is undefined')
   return (
     <div
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
@@ -41,10 +45,10 @@ const Modal = ({ bin, setView, setSelectedBin, setRecords }: appType.ModalProps)
           Created
         </h1>
         <div>
-          Bin '{bin.id}' has been successfully created!
+          Bin '{selectedBin.id}' has been successfully created!
         </div>
         <div className="mt-2 p-2 bg-gray-100 rounded font-mono text-sm break-words">
-          https://amazing-mostly-tadpole.ngrok-free.app/{bin.id}
+          https://amazing-mostly-tadpole.ngrok-free.app/{selectedBin.id}
         </div>
 
         <div className="flex justify-end gap-3 mt-6">
@@ -56,7 +60,7 @@ const Modal = ({ bin, setView, setSelectedBin, setRecords }: appType.ModalProps)
           </button>
           <button
             className="px-4 py-2 rounded border border-blue-600 bg-blue-600 text-white text-sm hover:bg-blue-700"
-            data-bin-id={bin.id}
+            data-bin-id={selectedBin.id}
             onClick={(e) => goToBinPage(e, setView, setSelectedBin, setRecords)}
           >
             Open Bin
@@ -66,5 +70,3 @@ const Modal = ({ bin, setView, setSelectedBin, setRecords }: appType.ModalProps)
     </div>
   );
 };
-
-export default Modal;

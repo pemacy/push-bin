@@ -4,6 +4,7 @@ import type * as appType from "../../utils/types"
 import type { BinPageHeaderProps } from "../../utils/types"
 import { RiFileShredLine } from "react-icons/ri";
 import { FcReuse } from "react-icons/fc";
+import { useViews, useBins, useRecords } from "../../contexts";
 
 const removeRecords = async (
   e: MouseEvent<HTMLElement>,
@@ -40,7 +41,13 @@ const removeBin = async (
 }
 
 
-const BinPageHeader = ({ setBins, selectedBin, setView, setSelectedBin, setRecords }: BinPageHeaderProps) => {
+const BinPageHeader = () => {
+  const { setBins, selectedBin, setSelectedBin } = useBins()
+  const { setView } = useViews()
+  const { setRecords } = useRecords()
+
+  if (selectedBin === undefined) throw new Error('In BinPageHeader: selectedBin is undefined')
+
   return (
     <div className="grid grid-cols-10 rounded-xl bg-white p-4 shadow-lg outline outline-black/5 dark:bg-slate-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
       <span className="col-start-1 col-end 4">

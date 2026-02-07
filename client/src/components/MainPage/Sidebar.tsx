@@ -1,12 +1,13 @@
 import type { MouseEvent } from 'react'
 import type * as appType from '../../utils/types'
 import * as api from '../../services/webhookApi'
+import { useRecords, useViews, useBins } from '../../contexts'
 
 const handleOnClick = async (
   e: MouseEvent<HTMLLIElement>,
-  setRecords: React.Dispatch<React.SetStateAction<appType.RecordWithDoc[]>>,
   setView: React.Dispatch<React.SetStateAction<appType.AppView>>,
-  setSelectedBin: React.Dispatch<React.SetStateAction<appType.BinInterface | undefined>>
+  setSelectedBin: React.Dispatch<React.SetStateAction<appType.BinInterface | undefined>>,
+  setRecords: React.Dispatch<React.SetStateAction<appType.RecordWithDoc[]>>
 ) => {
   e.preventDefault()
   const bin_id = e.currentTarget.dataset.binId
@@ -24,7 +25,11 @@ const handleOnClick = async (
   }
 }
 
-const Sidebar = ({ bins, setRecords, setView, setSelectedBin }: appType.SidebarProps) => {
+// const Sidebar = ({ bins, setRecords, setView, setSelectedBin }: appType.SidebarProps) => {
+export const Sidebar = () => {
+  const { bins, setSelectedBin } = useBins()
+  const { setView } = useViews()
+  const { setRecords } = useRecords()
   return (
     <nav className="h-full flex flex-col">
       <div className="px-4 py-3 text-lg font-semibold border-b border-gray-700">
@@ -42,7 +47,7 @@ const Sidebar = ({ bins, setRecords, setView, setSelectedBin }: appType.SidebarP
 
             return (
               <li key={bin.id}
-                onClick={(e) => handleOnClick(e, setRecords, setView, setSelectedBin)}
+                onClick={(e) => handleOnClick(e, setView, setSelectedBin, setRecords)}
                 data-bin-id={bin.id}
               >
                 <a
@@ -59,5 +64,3 @@ const Sidebar = ({ bins, setRecords, setView, setSelectedBin }: appType.SidebarP
     </nav>
   );
 };
-
-export default Sidebar;

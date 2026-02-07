@@ -9,7 +9,7 @@
     // See also https://aka.ms/tsconfig/module
     "module": "nodenext",
     "target": "esnext",
-    "types": ["node", "cors", "express", "pg", "mongoose", "ws"],
+    // "types": ["cors", "express", "pg", "mongoose", "ws"],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
@@ -43,5 +43,5 @@
     "outDir": "dist",
   },
   "include": ["./src"],
-  "exclude": ["src/tests"]
+  "exclude": ["src/tests", "node_modules"]
 }
