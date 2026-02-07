@@ -86,10 +86,9 @@ export const createRecord = async (req: Request, res: Response) => {
   console.log(Object.keys(recordWithDoc));
 
   wss.clients.forEach((client) => {
-    console.log("INSIDE WEB SOCKET");
     if (client.readyState === WebSocket.OPEN) {
       console.log(client.url);
-      client.send(JSON.stringify(recordWithDoc));
+      client.send(JSON.stringify({ type: "record", ...recordWithDoc }));
     }
   });
   res.status(200).json(record);
@@ -116,15 +115,15 @@ export const createBin = async (req: Request, res: Response) => {
   res.status(200).json(bin);
 };
 
-// DETELE /bins/:bin_id/records/:record_id
+// DELETE /bins/:bin_id/records/:record_id
 export const deleteRecord = async (req: Request, res: Response) => {
   const pgClient = await utils.setPgClient();
   const binId = req.params.bin_id;
-  const recordId = req.params.record_id;
-  const query = "DELETE FROM records WHERE bin_id = $1 AND id = $1 RETURNING *";
+  const recordId = Number(req.params.record_id);
+  const query = "DELETE FROM records WHERE bin_id = $1 AND id = $2 RETURNING *";
   const values = [binId, recordId];
-  const result = await pgClient.query(query, values);
   console.log(query, "- VALUES:", values);
+  const result = await pgClient.query(query, values);
   const record = result.rows[0];
   res.json(record);
 };
