@@ -6,6 +6,7 @@ import type { RecordComponentProps } from '../../../utils/types';
 import { useRecords, useFlash } from '../../../contexts';
 
 const host = location.hostname;
+export const LOCALHOST_DOMAIN = 'http://localhost:3000/api'
 export const DOMAIN =
   host === "localhost"
     ? `${location.protocol}//${host}:${location.port}`
@@ -27,7 +28,7 @@ const Record = ({ record }: RecordComponentProps) => {
 
   const removeRecord = async (e: React.MouseEvent<HTMLButtonElement>) => {
     try {
-      await axios.delete(`${DOMAIN}/bins/${record.bin_id}/records/${record.id}`)
+      await axios.delete(`${LOCALHOST_DOMAIN}/bins/${record.bin_id}/records/${record.id}`)
       setRecords(prev => prev.filter(r => r.id !== record.id))
       showFlash('Record deleted successfully!', 'success')
     } catch (err) {
